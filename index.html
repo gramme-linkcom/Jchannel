@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jちゃんねる</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #222222; /* Dark background inspired by Niconico Re:turn */
+            color: #e0e0e0; /* Light text for dark background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .header {
+            width: 100%;
+            background-color: #1a1a1a; /* Even darker header */
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333333; /* Subtle separator */
+        }
+        .header h1 {
+            color: #00a1d6; /* Niconico blue accent */
+            font-size: 3em; /* Larger, more prominent title */
+            font-weight: 800; /* Extra bold */
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 161, 214, 0.5); /* Blue glow */
+        }
+        .container {
+            background-color: #2c2c2c; /* Slightly lighter than body background */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 960px; /* Wider container for more content */
+            margin-bottom: 30px;
+            border: 1px solid #3a3a3a; /* Subtle border */
+        }
+        h2 {
+            color: #ffffff; /* White headings */
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00a1d6; /* Accent underline */
+            padding-bottom: 10px;
+            font-size: 2em; /* Larger subheadings */
+            font-weight: 700;
+        }
+        .post-card {
+            background-color: #383838; /* Darker card background */
+            border: 1px solid #4a4a4a; /* Slightly lighter border */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .post-card:hover {
+            transform: translateY(-5px); /* More pronounced lift on hover */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            background-color: #424242; /* Slightly lighter on hover */
+        }
+        .post-content {
+            font-size: 1.15em;
+            margin-bottom: 15px;
+            color: #f0f0f0; /* Light gray content text */
+            line-height: 1.7;
+        }
+        .post-meta {
+            font-size: 0.9em;
+            color: #b0b0b0; /* Lighter gray meta text */
+            text-align: right;
+            border-top: 1px dashed #555555; /* Darker dashed separator */
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #555555; /* Darker border */
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: #333333; /* Dark input background */
+            color: #e0e0e0; /* Light input text */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .form-input:focus, .form-textarea:focus {
+            border-color: #00a1d6; /* Niconico blue focus border */
+            box-shadow: 0 0 0 4px rgba(0, 161, 214, 0.3); /* Blue glow on focus */
+            outline: none;
+        }
+        .submit-button {
+            background-color: #00a1d6; /* Niconico blue */
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .submit-button:hover {
+            background-color: #008ac9; /* Darker blue on hover */
+            transform: translateY(-3px); /* More lift on hover */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        .submit-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .label {
+            color: #e0e0e0; /* Light label text */
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Jちゃんねる</h1>
+    </div>
+
+    <div class="container">
+        <div class="mb-8 p-6 bg-transparent rounded-lg border border-gray-700 shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4">新しい投稿</h2>
+            <form id="post-form" action="/post" method="POST">
+                <div class="mb-4">
+                    <label for="author" class="label">名前:</label>
+                    <input type="text" id="author" name="author" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="content" class="label">内容:</label>
+                    <textarea id="content" name="content" class="form-textarea" required></textarea>
+                </div>
+                <button type="submit" class="submit-button w-full">投稿する</button>
+            </form>
+        </div>
+
+        <h2 class="text-2xl font-semibold mb-4">投稿一覧</h2>
+        <div id="posts-list-container">
+            <p class="text-center text-gray-500 p-4" id="loading-message">投稿を読み込み中...</p>
+        </div>
+    </div>
+
+    <script>
+        // 投稿を表示するコンテナ要素を取得
+        const postsListContainer = document.getElementById('posts-list-container');
+        const loadingMessage = document.getElementById('loading-message');
+        const postForm = document.getElementById('post-form'); // フォーム要素を取得
+        const authorInput = document.getElementById('author');
+        const contentInput = document.getElementById('content');
+
+        let displayedPostIds = new Set(); // 表示済みの投稿IDを追跡するためのSet
+
+        // 投稿をAPIから取得し、HTMLにレンダリングする関数
+        async function fetchPostsAndRender() {
+            try {
+                // 初回ロード時のみローディングメッセージを表示
+                if (displayedPostIds.size === 0 && loadingMessage) {
+                    loadingMessage.style.display = 'block';
+                }
+
+                const response = await fetch('/api/posts');
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー！ステータス: ${response.status}`);
+                }
+                const posts = await response.json();
+
+                // 投稿がない場合のメッセージを更新
+                if (posts.length === 0 && displayedPostIds.size === 0) {
+                    postsListContainer.innerHTML = '<p class="text-center text-gray-500 p-4">まだ投稿はありません。</p>';
+                } else if (posts.length > 0) {
+                    // 新しい投稿を逆順に処理（最新の投稿が上にくるように）
+                    const newPosts = [];
+                    posts.reverse().forEach(post => {
+                        if (!displayedPostIds.has(post.id)) {
+                            newPosts.push(post);
+                            displayedPostIds.add(post.id); // 新しい投稿のIDをSetに追加
+                        }
+                    });
+
+                    // 新しい投稿だけをリストの先頭に追加
+                    newPosts.forEach(post => {
+                        const postCard = document.createElement('div');
+                        postCard.className = 'post-card';
+                        postCard.innerHTML = `
+                            <p class="post-content">${post.content}</p>
+                            <p class="post-meta">投稿者: ${post.author} - ${post.date}</p>
+                        `;
+                        // postsListContainerの最初の子要素として挿入
+                        postsListContainer.prepend(postCard);
+                    });
+                }
+            } catch (error) {
+                console.error('投稿の取得またはレンダリング中にエラーが発生しました:', error);
+                if (displayedPostIds.size === 0) { // 初回ロード時のみエラーメッセージを表示
+                    postsListContainer.innerHTML = '<p class="text-center text-red-400 p-4">投稿の読み込みに失敗しました。</p>';
+                }
+            } finally {
+                // ローディングメッセージを非表示
+                if (loadingMessage) {
+                    loadingMessage.style.display = 'none';
+                }
+            }
+        }
+
+        // フォーム送信時のイベントリスナー
+        postForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // フォームの通常の送信（ページリロード）を防ぐ
+
+            const formData = new FormData(postForm); // フォームデータを取得
+
+            try {
+                const response = await fetch('/post', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    // エラーレスポンスの場合
+                    const errorMessage = await response.text();
+                    alert('投稿に失敗しました: ' + errorMessage);
+                    throw new Error('投稿失敗: ' + errorMessage);
+                }
+
+                // 投稿が成功したら、フォームをクリア
+                authorInput.value = '';
+                contentInput.value = '';
+
+                // そして、すぐに投稿リストを更新
+                fetchPostsAndRender();
+
+            } catch (error) {
+                console.error('投稿送信中にエラーが発生しました:', error);
+                alert('投稿中にエラーが発生しました。ネットワーク接続を確認してください。');
+            }
+        });
+
+        // ページロード時に投稿をフェッチしてレンダリング
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPostsAndRender();
+            // 3秒ごとに投稿を自動更新
+            setInterval(fetchPostsAndRender, 3000);
+        });
+    </script>
+</body>
+</html>
